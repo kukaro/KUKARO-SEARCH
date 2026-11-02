@@ -1,0 +1,43 @@
+{
+  "language": "korean",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit(knowledge/**)",
+      "Write(knowledge/**)",
+      "Bash(git:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath // empty' | { read -r f; if echo \"$f\" | grep -qE 'knowledge/.*\\.md$'; then echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Knowledge document updated. Remember to check frontmatter (title, tags, created, updated) is present and correct.\"}}'; fi; } 2>/dev/null || true",
+            "timeout": 10,
+            "statusMessage": "Checking knowledge document..."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreCompact\",\"additionalContext\":\"This is a knowledge base project (KUKARO-SEARCH). Preserve: current topic being worked on, any pending document updates, and the knowledge directory structure context.\"}}'",
+            "timeout": 5,
+            "statusMessage": "Preserving KB context..."
+          }
+        ]
+      }
+    ]
+  }
+}
