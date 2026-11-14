@@ -191,25 +191,38 @@ def safe_request(url, headers=None, max_retries=MAX_RETRIES, delay=DETAIL_DELAY)
 # ── 1단계: 검색 ──────────────────────────────────────
 
 def search_climbing_gyms(query: str, lat: float, lng: float) -> list[dict]:
-    """네이버 지도 instant-search API로 암장 검색"""
-    url = (
-        f"https://map.naver.com/p/api/search/instant-search"
-        f"?query={quote(query)}&coords={lat},{lng}"
-    )
-    resp = safe_request(url, headers=HEADERS, delay=SEARCH_DELAY)
-    if not resp:
-        return []
-    try:
-        data = resp.json()
+    """네이버 지도 instant-search API로 암장 검색 (페이징 포함)"""
+    all_places = []
+    start = 1
+    while True:
+        url = (
+            f"https://map.naver.com/p/api/search/instant-search"
+            f"?query={quote(query)}&coords={lat},{lng}&start={start}"
+        )
+        resp = safe_request(url, headers=HEADERS, delay=SEARCH_DELAY)
+        if not resp:
+            break
+        try:
+            data = resp.json()
+        except (json.JSONDecodeError, KeyError):
+            break
         places = data.get("place", []) or []
-        # 암벽등반/클라이밍 카테고리만 필터
-        results = []
-        for p in places:
-            ctg = p.get("ctg", "")
-            title = p.get("title", "")
-            # 암벽등반 카테고리이거나, 이름에 클라이밍/볼더링/암장 포함
-            if ("암벽" in ctg or "클라이밍" in ctg or
-                "클라이밍" in title or "볼더링" in title or
+        if not places:
+            break
+        all_places.extend(places)
+        if len(places) < 10:
+            break
+        start += 10
+        time.sleep(SEARCH_DELAY)
+
+    # 암벽등반/클라이밍 카테고리만 필터
+    results = []
+    for p in all_places:
+        ctg = p.get("ctg", "")
+        title = p.get("title", "")
+        # 암벽등반 카테고리이거나, 이름에 클라이밍/볼더링/암장 포함
+        if ("암벽" in ctg or "클라이밍" in ctg or
+            "클라이밍" in title or "볼더링" in title or
                 "climbing" in title.lower() or "보울더" in title):
                 results.append({
                     "id": p.get("id"),
