@@ -61,6 +61,13 @@ updated: 2026-11-03
 | 최대 해상도 | 480p~4K (플랫폼 의존) | 1080p |
 | 최적 용도 | 풀 내러티브, 광고 | 빠른 숏폼 클립 |
 
+## Seedance vs Dreamina 차이
+
+- **Seedance**: ByteDance가 개발한 AI 영상 생성 **모델(엔진)**
+- **Dreamina**: Seedance 모델을 사용할 수 있는 **웹 플랫폼(인터페이스)** 중 하나
+- ByteDance는 Seedance를 직접 판매하지 않고, Dreamina를 포함한 서드파티 플랫폼을 통해 배포
+- 비유: Seedance = GPT (모델), Dreamina = ChatGPT (사용자 인터페이스)
+
 ## 플랫폼 접근 옵션
 
 | 플랫폼 | 비고 |

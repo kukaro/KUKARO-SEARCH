@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/justk/.claude/projects/C--Users-justk-KUKARO-SEARCH/memory//**)",
+      "Read(//c/Users/justk/.claude/projects/C--Users-justk-KUKARO-SEARCH/memory/**)",
+      "Skill(update-config)",
+      "Bash(git push:*)",
+      "WebSearch",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "mcp__claude_ai_Notion__notion-search",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-create-pages",
+      "mcp__claude_ai_Notion__notion-update-page"
+    ]
+  }
+}
